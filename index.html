@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Coil Specification Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .input-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #4CAF50;
+        }
+
+        .results-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #2196F3;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 2px;
+        }
+
+        .results-panel .panel-title::before {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            border-color: #4CAF50;
+            background: #f8fff8;
+        }
+
+        .radio-option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+            accent-color: #4CAF50;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group input[type="number"], select {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .unit {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1976D2;
+        }
+
+        .result-unit {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .visualization {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coil-diagram {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .coil-diagram.circular {
+            border-radius: 50%;
+        }
+
+        .coil-diagram::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px dashed #4CAF50;
+            border-radius: inherit;
+        }
+
+        .formula-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .formula-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .export-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Advanced Coil Specification Calculator</h1>
+            <p>Professional calculation tool for precise electromagnetic coil design</p>
+            <div style="margin-top: 20px;">
+                <img src="diagram_coil_length.png" alt="Coil length diagram" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-panel">
+                <h2 class="panel-title">Input Parameters</h2>
+
+                <div class="section">
+                    <div class="section-title">1. Coil Shape</div>
+                    <div class="radio-group">
+                        <label class="radio-option selected">
+                            <input type="radio" name="coilShape" value="rectangular" checked>
+                            <span>Rectangular Coil</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="coilShape" value="circular">
+                            <span>Circular Coil</span>
+                        </label>
+                    </div>
+
+                    <div id="rect-coil-dims">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Inner width (A)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="A" value="100" step="0.1" min="0">
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Inner length (B)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="B" value="50" step="0.1" min="0">
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Corner R (R)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="R" value="10" step="0.1" min="0">
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="circ-coil-dims" class="hidden">
+                        <div class="input-group">
+                            <label>Inner diameter</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="innerDimCirc" value="50" step="0.1" min="0">
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">2. Wire Specification</div>
+                    <div class="radio-group">
+                        <label class="radio-option selected">
+                            <input type="radio" name="wireShape" value="rectangular" checked>
+                            <span>Rectangular Cross-section</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wireShape" value="circular">
+                            <span>Circular Cross-section</span>
+                        </label>
+                    </div>
+
+                    <div id="rect-wire-dims">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Width of a wire (W_d)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="W_d" value="2" step="0.01" min="0.01">
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Wire thickness (t)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="t" value="1" step="0.01" min="0.01">
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="circ-wire-dims" class="hidden">
+                        <div class="input-group">
+                            <label>Wire diameter (a)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="a" value="1.5" step="0.01" min="0.01">
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Material Selection</label>
+                        <select id="wireMaterial" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; background: white; font-size: 16px;">
+                            <option value="copper">Copper (Cu)</option>
+                            <option value="aluminum">Aluminum (Al)</option>
+                            <option value="silver">Silver (Ag)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">3. Winding Specification</div>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Turn number of a single layer (n)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="n" value="10" min="1">
+                                <span class="unit">ea</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>No. of layers (m)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="m" value="5" min="1">
+                                <span class="unit">ea</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Horizontal spacing (s_h)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="s_h" value="0.1" step="0.01" min="0">
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Vertical spacing (s_v)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="s_v" value="0.2" step="0.01" min="0">
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculate()">
+                    🔬 Execute Precision Calculation
+                </button>
+            </div>
+
+            <div class="results-panel">
+                <h2 class="panel-title">Calculation Results</h2>
+                
+                <div class="results-container" id="results-container">
+                    <div class="visualization">
+                        <div id="coil-diagram" class="coil-diagram">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #666;">
+                                Coil Shape
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-grid">
+                        <div class="result-card">
+                            <div class="result-label">Overall Size</div>
+                            <div class="result-value" id="coil-size">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Total Wire Length</div>
+                            <div class="result-value" id="total-length">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">DC Resistance</div>
+                            <div class="result-value" id="dc-resistance">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Wire Weight</div>
+                            <div class="result-value" id="wire-weight">-</div>
+                        </div>
+                    </div>
+
+                    <div class="formula-section">
+                        <div class="formula-title">📝 Applied Formulas</div>
+                        <div class="formula" id="formula-display">
+                            R = ρ × L / A<br>
+                            ρ: Material resistivity, L: Length, A: Cross-sectional area
+                        </div>
+                    </div>
+
+                    <div class="export-section">
+                        <button class="export-btn" onclick="exportResults()">📊 Export Results</button>
+                        <button class="export-btn" onclick="printResults()">🖨️ Print</button>
+                        <button class="export-btn" onclick="shareResults()">📤 Share</button>
+                    </div>
+                </div>
+
+                <div id="error-container" class="error-message hidden">
+                    <strong>Error:</strong> <span id="error-message"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Material properties (at 20°C)
+        const materials = {
+            copper: { 
+                resistivity: 1.724e-8, 
+                density: 8.96, 
+                name: 'Copper',
+                tempCoeff: 0.00393
+            },
+            aluminum: { 
+                resistivity: 2.82e-8, 
+                density: 2.70, 
+                name: 'Aluminum',
+                tempCoeff: 0.00403
+            },
+            silver: { 
+                resistivity: 1.59e-8, 
+                density: 10.49, 
+                name: 'Silver',
+                tempCoeff: 0.0038
+            }
+        };
+
+        // UI element references
+        const coilShapeRadios = document.getElementsByName('coilShape');
+        const wireShapeRadios = document.getElementsByName('wireShape');
+        const radioOptions = document.querySelectorAll('.radio-option');
+        
+        // Event listeners setup
+        coilShapeRadios.forEach(radio => radio.addEventListener('change', updateUI));
+        wireShapeRadios.forEach(radio => radio.addEventListener('change', updateUI));
+        
+        // Radio button visual update
+        radioOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                const groupName = radio.name;
+                
+                // Remove selected class from other options in the same group
+                document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+                    r.closest('.radio-option').classList.remove('selected');
+                });
+                
+                // Add selected class to current option
+                this.classList.add('selected');
+                radio.checked = true;
+                
+                updateUI();
+            });
+        });
+
+        function updateUI() {
+            const coilShape = document.querySelector('input[name="coilShape"]:checked').value;
+            const wireShape = document.querySelector('input[name="wireShape"]:checked').value;
+
+            // Update UI based on coil shape
+            document.getElementById('rect-coil-dims').classList.toggle('hidden', coilShape !== 'rectangular');
+            document.getElementById('circ-coil-dims').classList.toggle('hidden', coilShape !== 'circular');
+            
+            // Update UI based on wire cross-section
+            document.getElementById('rect-wire-dims').classList.toggle('hidden', wireShape !== 'rectangular');
+            document.getElementById('circ-wire-dims').classList.toggle('hidden', wireShape !== 'circular');
+            
+            // Update coil diagram
+            const diagram = document.getElementById('coil-diagram');
+            diagram.className = coilShape === 'circular' ? 'coil-diagram circular' : 'coil-diagram';
+        }
+
+        function showError(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-container').classList.remove('hidden');
+            document.getElementById('results-container').classList.remove('show');
+        }
+
+        function hideError() {
+            document.getElementById('error-container').classList.add('hidden');
+        }
+
+        function calculate() {
+            hideError();
+            
+            try {
+                const coilShape = document.querySelector('input[name="coilShape"]:checked').value;
+                const wireShape = document.querySelector('input[name="wireShape"]:checked').value;
+                const materialType = document.getElementById('wireMaterial').value;
+                const material = materials[materialType];
+                
+                // Input validation and reading
+                const n = parseInt(document.getElementById('n').value);  // turns
+                const m = parseInt(document.getElementById('m').value);  // layers
+                const s_h = parseFloat(document.getElementById('s_h').value);  // horizontal spacing
+                const s_v = parseFloat(document.getElementById('s_v').value);  // vertical spacing
+                
+                if (n <= 0 || m <= 0) {
+                    throw new Error('Number of turns and layers must be greater than 0.');
+                }
+
+                // Wire specification calculation
+                let wireWidth, wireThickness, crossSectionalArea_mm2;
+                
+                if (wireShape === 'rectangular') {
+                    wireWidth = parseFloat(document.getElementById('W_d').value);
+                    wireThickness = parseFloat(document.getElementById('t').value);
+                    
+                    if (wireWidth <= 0 || wireThickness <= 0) {
+                        throw new Error('Wire dimensions must be greater than 0.');
+                    }
+                    
+                    crossSectionalArea_mm2 = wireWidth * wireThickness;
+                } else {
+                    const wireDiameter = parseFloat(document.getElementById('a').value);
+                    
+                    if (wireDiameter <= 0) {
+                        throw new Error('Wire diameter must be greater than 0.');
+                    }
+                    
+                    wireWidth = wireDiameter;
+                    wireThickness = wireDiameter;
+                    crossSectionalArea_mm2 = Math.PI * Math.pow(wireDiameter / 2, 2);
+                }
+
+                // Coil length calculation
+                let singleLayerLength_mm = 0;
+                const pitch = wireWidth + s_h;
+                let coilSizeStr = '';
+
+                if (coilShape === 'rectangular') {
+                    const A = parseFloat(document.getElementById('A').value);  // inner width
+                    const B = parseFloat(document.getElementById('B').value);  // inner length
+                    const R = parseFloat(document.getElementById('R').value) || 0;  // corner radius
+
+                    if (A <= 0 || B <= 0) {
+                        throw new Error('Coil inner dimensions must be greater than 0.');
+                    }
+
+                    if (2 * R > Math.min(A, B)) {
+                        throw new Error('Corner radius is too large for the given dimensions.');
+                    }
+
+                    // Calculate length for each turn
+                    for (let i = 0; i < n; i++) {
+                        const currentOffset = i * pitch;
+                        let turnLength;
+                        
+                        if (R > 0) {
+                            const currentA = A + 2 * currentOffset;
+                            const currentB = B + 2 * currentOffset;
+                            const currentR = R + currentOffset;
+                            
+                            const straightA = Math.max(0, currentA - 2 * currentR);
+                            const straightB = Math.max(0, currentB - 2 * currentR);
+                            const curveLength = 2 * Math.PI * currentR;
+                            
+                            turnLength = 2 * straightA + 2 * straightB + curveLength;
+                        } else {
+                            const sideA = A + wireWidth + 2 * currentOffset;
+                            const sideB = B + wireWidth + 2 * currentOffset;
+                            turnLength = 2 * (sideA + sideB);
+                        }
+                        singleLayerLength_mm += turnLength;
+                    }
+                    
+                    const radialThickness = (n * wireWidth) + Math.max(0, (n - 1) * s_h);
+                    const outerA = A + 2 * radialThickness;
+                    const outerB = B + 2 * radialThickness;
+                    const height = (m * wireThickness) + Math.max(0, (m - 1) * s_v);
+                    
+                    coilSizeStr = `${outerA.toFixed(2)} × ${outerB.toFixed(2)} × ${height.toFixed(2)} mm`;
+                    
+                } else { // circular
+                    const innerDiam = parseFloat(document.getElementById('innerDimCirc').value);
+                    
+                    if (innerDiam <= 0) {
+                        throw new Error('Coil inner diameter must be greater than 0.');
+                    }
+                    
+                    for (let i = 0; i < n; i++) {
+                        const diameter = innerDiam + wireWidth + 2 * i * pitch;
+                        singleLayerLength_mm += Math.PI * diameter;
+                    }
+                    
+                    const radialThickness = (n * wireWidth) + Math.max(0, (n - 1) * s_h);
+                    const outerDiam = innerDiam + 2 * radialThickness;
+                    const height = (m * wireThickness) + Math.max(0, (m - 1) * s_v);
+                    
+                    coilSizeStr = `⌀ ${outerDiam.toFixed(2)} × ${height.toFixed(2)} mm`;
+                }
+
+                // Total length and basic calculations
+                const totalLength_mm = singleLayerLength_mm * m;
+                const totalLength_m = totalLength_mm / 1000;
+                const crossSectionalArea_m2 = crossSectionalArea_mm2 / 1_000_000;
+                
+                // DC resistance (at 20°C)
+                const dcResistance = material.resistivity * totalLength_m / crossSectionalArea_m2;
+                
+                // Wire weight (g)
+                const wireWeight = material.density * crossSectionalArea_mm2 * totalLength_mm / 1000;
+
+                // Display results
+                document.getElementById('coil-size').innerHTML = `${coilSizeStr}`;
+                document.getElementById('total-length').innerHTML = `${totalLength_m.toFixed(3)} <span class="result-unit">m</span>`;
+                document.getElementById('dc-resistance').innerHTML = `${dcResistance.toFixed(4)} <span class="result-unit">Ω</span>`;
+                document.getElementById('wire-weight').innerHTML = `${wireWeight.toFixed(1)} <span class="result-unit">g</span>`;
+                
+                // Update formula display
+                document.getElementById('formula-display').innerHTML = `
+                    <strong>DC Resistance:</strong> R = ρ × L / A = ${material.resistivity.toExponential(3)} × ${totalLength_m.toFixed(3)} / ${crossSectionalArea_m2.toExponential(3)}<br>
+                    <strong>Weight:</strong> W = Density × Volume = ${material.density} × ${crossSectionalArea_mm2.toFixed(3)} × ${totalLength_mm.toFixed(1)}<br>
+                    <strong>Material:</strong> ${material.name} (at 20°C)
+                `;
+                
+                document.getElementById('results-container').classList.add('show');
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function exportResults() {
+            const results = {
+                coilSize: document.getElementById('coil-size').textContent,
+                totalLength: document.getElementById('total-length').textContent,
+                dcResistance: document.getElementById('dc-resistance').textContent,
+                wireWeight: document.getElementById('wire-weight').textContent,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "coil_calculation_results.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function printResults() {
+            window.print();
+        }
+
+        function shareResults() {
+            if (navigator.share) {
+                const shareData = {
+                    title: 'Coil Calculation Results',
+                    text: `Coil specification calculation completed\nSize: ${document.getElementById('coil-size').textContent}\nResistance: ${document.getElementById('dc-resistance').textContent}`,
+                };
+                navigator.share(shareData);
+            } else {
+                // Fallback: copy to clipboard
+                const resultsText = `Coil Calculation Results\nSize: ${document.getElementById('coil-size').textContent}\nTotal Length: ${document.getElementById('total-length').textContent}\nDC Resistance: ${document.getElementById('dc-resistance').textContent}\nWire Weight: ${document.getElementById('wire-weight').textContent}`;
+                navigator.clipboard.writeText(resultsText).then(() => {
+                    alert('Results copied to clipboard!');
+                });
+            }
+        }
+
+        // Initial UI setup
+        document.addEventListener('DOMContentLoaded', updateUI);
+    </script>
+</body>
+</html>
