@@ -11,13 +11,13 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh; padding: 20px; color: #333;
     }
-    .container { max-width: 1200px; margin: 0 auto; background: rgba(255,255,255,.95);
+    .container {text-align: center; max-width: 1200px; margin: 0 auto; background: rgba(255,255,255,.95);
       backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,.1); overflow: hidden; }
     .header { background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 30px; text-align: center; color: #fff; }
     .header h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 700; }
     .header p { font-size: 1.1rem; opacity: .9; }
-    .header img { margin-top: 20px; max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,.2); }
-    .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px; }
+    .header img { margin-top: 20px; max-width: 50%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,.2); }
+    .main-content { display: grid; grid-template-columns: 0.5fr 0.5fr; gap: 30px; padding: 30px; }
     .input-panel, .results-panel { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,.08); }
     .input-panel { border-left: 5px solid #4CAF50; }
     .results-panel { border-left: 5px solid #2196F3; }
@@ -40,7 +40,7 @@
     }
     .input-group input[type="number"]:focus, select:focus { outline:none; border-color:#4CAF50; box-shadow:0 0 0 3px rgba(76,175,80,.1); }
     .unit { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:#6c757d; font-size:.9rem; pointer-events:none; }
-    .calculate-btn { width:100%; padding:16px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color:#fff; border:none; border-radius:10px;
+    .calculate-btn { width:50%; padding:16px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color:#fff; border:none; border-radius:10px;
       font-size:1.1rem; font-weight:600; cursor:pointer; transition:.3s; margin-top:20px; box-shadow:0 4px 15px rgba(76,175,80,.3); }
     .calculate-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(76,175,80,.4); }
     .calculate-btn:active { transform: translateY(0); }
@@ -58,219 +58,217 @@
     .formula{ font-family:'Courier New', monospace; background:#fff; padding:10px; border-radius:5px; border:1px solid #ddd; font-size:.9em; line-height:1.5; overflow-x:auto; }
     .error-message{ background:#f8d7da; color:#721c24; padding:15px; border-radius:8px; margin:15px 0; border-left:4px solid #dc3545; }
     .hidden{ display:none !important; }
-    @media (max-width: 992px) { .main-content{ grid-template-columns:1fr; } }
-    @media (max-width: 768px) { .header h1{ font-size:2rem; } .radio-group, .input-grid, .result-grid{ grid-template-columns:1fr; } }
+    @media (max-width: 800px) { .main-content{ grid-template-columns:1fr; } }
+    @media (max-width: 400px) { .header h1{ font-size:2rem; } .radio-group, .input-grid, .result-grid{ grid-template-columns:1fr; } }
     .export-section{ margin-top:20px; padding:15px; background:#f8f9fa; border-radius:8px; text-align:center; }
     .export-btn{ background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; margin:5px; transition:.3s; }
     .export-btn:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(33,150,243,.3); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>🔧 Advanced Coil Specification Calculator</h1>
-      <p>Professional calculation tool for precise electromagnetic coil design</p>
-    </div>
-  </div>
     <div class="container">
-      <div style="margin-top:20px;">
-        <img src="https://emlizard.github.io/main-page/images/diagram_coil_length.png" alt="Coil length diagram" style="max-width: 50%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-      </div>
+        <div class="header">
+            <h1>🔧 Advanced Coil Specification Calculator</h1>
+            <p>Professional calculation tool for precise electromagnetic coil design</p>
+        </div>
+
+        <div style="margin-top:20px;">
+            <img src="https://emlizard.github.io/main-page/images/diagram_coil_length.png" alt="Coil length diagram" style="max-width: 50%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
+    
+        <div class="main-content">
+            <div class="input-panel">
+                <h2 class="panel-title">Input Parameters</h2>
+
+                <div class="section">
+                    <div class="section-title">1. Coil Shape</div>
+                    <div class="radio-group">
+                        <label class="radio-option selected">
+                            <input type="radio" name="coilShape" value="rectangular" checked />
+                            <span>Rectangular Coil</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="coilShape" value="circular" />
+                            <span>Circular Coil</span>
+                        </label>
+                    </div>
+
+                    <div id="rect-coil-dims">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Inner width (A)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="A" value="100" step="0.1" min="0" />
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Inner length (B)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="B" value="50" step="0.1" min="0" />
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Corner R (R)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="R" value="10" step="0.1" min="0" />
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="circ-coil-dims" class="hidden">
+                        <div class="input-group">
+                            <label>Inner diameter</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="innerDimCirc" value="50" step="0.1" min="0" />
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">2. Wire Specification</div>
+                    <div class="radio-group">
+                        <label class="radio-option selected">
+                            <input type="radio" name="wireShape" value="rectangular" checked />
+                            <span>Rectangular Cross-section</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wireShape" value="circular" />
+                            <span>Circular Cross-section</span>
+                        </label>
+                    </div>
+
+                    <div id="rect-wire-dims">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Width of a wire (W_d)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="W_d" value="2" step="0.01" min="0.01" />
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Wire thickness (t)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="t" value="1" step="0.01" min="0.01" />
+                                    <span class="unit">mm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="circ-wire-dims" class="hidden">
+                        <div class="input-group">
+                            <label>Wire diameter (a)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="a" value="1.5" step="0.01" min="0.01" />
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Material Selection</label>
+                        <select id="wireMaterial" style="width:100%; padding:12px; border:2px solid #e9ecef; border-radius:8px; background:#fff; font-size:16px;">
+                            <option value="copper">Copper (Cu)</option>
+                            <option value="aluminum">Aluminum (Al)</option>
+                            <option value="silver">Silver (Ag)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">3. Winding Specification</div>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Turn number of a single layer (n)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="n" value="10" min="1" />
+                                <span class="unit">Turns</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>No. of layers (m)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="m" value="1" min="1" />
+                                <span class="unit">Layers</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Horizontal spacing (s_h)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="s_h" value="0.1" step="0.01" min="0" />
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Vertical spacing (s_v)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="s_v" value="0.2" step="0.01" min="0" />
+                                <span class="unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculate()">🔬 Execute Precision Calculation</button>
+            </div>
+
+            <div class="results-panel">
+                <h2 class="panel-title">Calculation Results</h2>
+                <div class="results-container" id="results-container">
+                    <div class="result-grid">
+                        <div class="result-card">
+                            <div class="result-label">Overall Size</div>
+                            <div class="result-value" id="coil-size">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Total Wire Length</div>
+                            <div class="result-value" id="total-length">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">DC Resistance</div>
+                            <div class="result-value" id="dc-resistance">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Wire Weight</div>
+                            <div class="result-value" id="wire-weight">-</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Inductance</div>
+                            <div class="result-value" id="inductance">-</div>
+                        </div>
+                    </div>
+
+                    <div class="formula-section">
+                        <div class="formula-title">📝 Applied Formulas</div>
+                        <div class="formula" id="formula-display">
+                            R = ρ × L / A<br>
+                            ρ: Material resistivity, L: Length, A: Cross-sectional area
+                        </div>
+                    </div>
+
+                    <div class="export-section">
+                        <button class="export-btn" onclick="exportResults()">📊 Export Results</button>
+                        <button class="export-btn" onclick="printResults()">🖨️ Print</button>
+                        <button class="export-btn" onclick="shareResults()">📤 Share</button>
+                    </div>
+                </div>
+
+                <div id="error-container" class="error-message hidden">
+                    <strong>Error:</strong> <span id="error-message"></span>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="main-content">
-      <div class="input-panel">
-        <h2 class="panel-title">Input Parameters</h2>
-
-        <div class="section">
-          <div class="section-title">1. Coil Shape</div>
-          <div class="radio-group">
-            <label class="radio-option selected">
-              <input type="radio" name="coilShape" value="rectangular" checked />
-              <span>Rectangular Coil</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="coilShape" value="circular" />
-              <span>Circular Coil</span>
-            </label>
-          </div>
-
-          <div id="rect-coil-dims">
-            <div class="input-grid">
-              <div class="input-group">
-                <label>Inner width (A)</label>
-                <div class="input-wrapper">
-                  <input type="number" id="A" value="100" step="0.1" min="0" />
-                  <span class="unit">mm</span>
-                </div>
-              </div>
-              <div class="input-group">
-                <label>Inner length (B)</label>
-                <div class="input-wrapper">
-                  <input type="number" id="B" value="50" step="0.1" min="0" />
-                  <span class="unit">mm</span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group">
-              <label>Corner R (R)</label>
-              <div class="input-wrapper">
-                <input type="number" id="R" value="10" step="0.1" min="0" />
-                <span class="unit">mm</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="circ-coil-dims" class="hidden">
-            <div class="input-group">
-              <label>Inner diameter</label>
-              <div class="input-wrapper">
-                <input type="number" id="innerDimCirc" value="50" step="0.1" min="0" />
-                <span class="unit">mm</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="section-title">2. Wire Specification</div>
-          <div class="radio-group">
-            <label class="radio-option selected">
-              <input type="radio" name="wireShape" value="rectangular" checked />
-              <span>Rectangular Cross-section</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="wireShape" value="circular" />
-              <span>Circular Cross-section</span>
-            </label>
-          </div>
-
-          <div id="rect-wire-dims">
-            <div class="input-grid">
-              <div class="input-group">
-                <label>Width of a wire (W_d)</label>
-                <div class="input-wrapper">
-                  <input type="number" id="W_d" value="2" step="0.01" min="0.01" />
-                  <span class="unit">mm</span>
-                </div>
-              </div>
-              <div class="input-group">
-                <label>Wire thickness (t)</label>
-                <div class="input-wrapper">
-                  <input type="number" id="t" value="1" step="0.01" min="0.01" />
-                  <span class="unit">mm</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div id="circ-wire-dims" class="hidden">
-            <div class="input-group">
-              <label>Wire diameter (a)</label>
-              <div class="input-wrapper">
-                <input type="number" id="a" value="1.5" step="0.01" min="0.01" />
-                <span class="unit">mm</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label>Material Selection</label>
-            <select id="wireMaterial" style="width:100%; padding:12px; border:2px solid #e9ecef; border-radius:8px; background:#fff; font-size:16px;">
-              <option value="copper">Copper (Cu)</option>
-              <option value="aluminum">Aluminum (Al)</option>
-              <option value="silver">Silver (Ag)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="section-title">3. Winding Specification</div>
-          <div class="input-grid">
-            <div class="input-group">
-              <label>Turn number of a single layer (n)</label>
-              <div class="input-wrapper">
-                <input type="number" id="n" value="10" min="1" />
-                <span class="unit">Turns</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <label>No. of layers (m)</label>
-              <div class="input-wrapper">
-                <input type="number" id="m" value="1" min="1" />
-                <span class="unit">Layers</span>
-              </div>
-            </div>
-          </div>
-          <div class="input-grid">
-            <div class="input-group">
-              <label>Horizontal spacing (s_h)</label>
-              <div class="input-wrapper">
-                <input type="number" id="s_h" value="0.1" step="0.01" min="0" />
-                <span class="unit">mm</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <label>Vertical spacing (s_v)</label>
-              <div class="input-wrapper">
-                <input type="number" id="s_v" value="0.2" step="0.01" min="0" />
-                <span class="unit">mm</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button class="calculate-btn" onclick="calculate()">🔬 Execute Precision Calculation</button>
-      </div>
-
-      <div class="results-panel">
-        <h2 class="panel-title">Calculation Results</h2>
-        <div class="results-container" id="results-container">
-          <div class="result-grid">
-            <div class="result-card">
-              <div class="result-label">Overall Size</div>
-              <div class="result-value" id="coil-size">-</div>
-            </div>
-            <div class="result-card">
-              <div class="result-label">Total Wire Length</div>
-              <div class="result-value" id="total-length">-</div>
-            </div>
-            <div class="result-card">
-              <div class="result-label">DC Resistance</div>
-              <div class="result-value" id="dc-resistance">-</div>
-            </div>
-            <div class="result-card">
-              <div class="result-label">Wire Weight</div>
-              <div class="result-value" id="wire-weight">-</div>
-            </div>
-            <div class="result-card">
-              <div class="result-label">Inductance</div>
-              <div class="result-value" id="inductance">-</div>
-            </div>
-          </div>
-
-          <div class="formula-section">
-            <div class="formula-title">📝 Applied Formulas</div>
-            <div class="formula" id="formula-display">
-              R = ρ × L / A<br>
-              ρ: Material resistivity, L: Length, A: Cross-sectional area
-            </div>
-          </div>
-
-          <div class="export-section">
-            <button class="export-btn" onclick="exportResults()">📊 Export Results</button>
-            <button class="export-btn" onclick="printResults()">🖨️ Print</button>
-            <button class="export-btn" onclick="shareResults()">📤 Share</button>
-          </div>
-        </div>
-
-        <div id="error-container" class="error-message hidden">
-          <strong>Error:</strong> <span id="error-message"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
+    
   <script>
     // ===== Materials (20°C) =====
     const materials = {
