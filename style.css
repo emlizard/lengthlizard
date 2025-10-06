@@ -152,7 +152,7 @@
 }
 
 .hero-image {
-    width: 100%; /* 컨테이너에 맞게 너비를 채우되, */
+    width: 50%; /* 컨테이너에 맞게 너비를 채우되, */
     max-width: 500px; /* 최대 너비는 500px로 제한 */
     height: auto;
     border-radius: var(--radius-large); /* 둥근 모서리 */
