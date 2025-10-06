@@ -562,3 +562,51 @@
       font-style: italic;
       padding: 2rem;
     }
+/* --- ✅ 새로운 UI 지원을 위해 추가된 스타일 --- */
+.hidden {
+    display: none !important;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.radio-option {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    background-color: var(--surface);
+}
+
+.radio-option:hover {
+    border-color: var(--accent);
+}
+
+.radio-option.selected {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-medium);
+}
+
+.radio-option input[type="radio"] {
+    display: none; /* 실제 라디오 버튼은 숨김 */
+}
+
+.result-item--highlight {
+    grid-column: 1 / -1;
+    background: var(--surface);
+    border-left: 4px solid var(--primary);
+    transform: scale(1.02);
+}
+
+.result-item--highlight .result-value {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
