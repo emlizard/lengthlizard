@@ -164,7 +164,7 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem 1rem;
+      padding: 1rem 1rem;
     }
 
 /* --- ✅ 이미지를 위한 새로운 스타일 --- */
@@ -464,7 +464,7 @@
     .formula-section h3 {
       color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 1.25rem;
+      font-size: 2rem;
       font-weight: 600;
     }
 
